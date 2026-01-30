@@ -49,7 +49,7 @@ Food_waste_management/
 ### Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/Sajal-2003/Food_waste_management.git
+   git clone https://github.com/Ananya/FoodWasteManagement.git
    ```
 
 2. Navigate to the project directory:
