@@ -86,7 +86,6 @@ Food_waste_management/
 - **CSS3**: Modern responsive design with gradients, animations, and glassmorphism effects
 - **JavaScript (ES6+)**: Client-side functionality, form validation, and data management
 - **Google Fonts**: Typography using Paytone One, Inter, Poppins, and Playfair Display
-- **Boxicons**: Modern icon library for social media and UI elements
 - **localStorage API**: Browser-based data persistence without backend requirements
 
 ### Key JavaScript Classes
@@ -108,12 +107,6 @@ Food_waste_management/
 - Date/time validation (must be in future)
 - Quantity validation (must be positive number)
 
-## 📱 Responsive Design
-
-The system is fully responsive and works on:
-- Desktop computers (1024px and above)
-- Tablets (768px to 1023px)
-- Mobile phones (up to 767px)
 
 ## 🎨 Customization
 
@@ -127,34 +120,3 @@ The system is fully responsive and works on:
 - Core logic in `js/script.js`
 - Easy to extend with new features
 - Modular class-based architecture
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
-## 👥 Team
-
-- **Sajal Aggarwal** - Developer
-- **Shobhit Sharma** - Developer
-- **Kurmala Chenchu Baba Manikanta** - Developer
-- **Mohd. Rahil** - Developer
-- **Lokesh Srireddy** - Developer
-
-## 🙏 Acknowledgments
-
-- Inspired by the global food waste crisis
-- Pope Francis quote on food waste
-- United Nations Environment Programme Food Waste Index Report
-- Various NGOs and charities working on food waste reduction
-
----
-
-**Together we can reduce food waste and fight hunger!** 🍽️🌱
