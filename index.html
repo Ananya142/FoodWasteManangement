@@ -11,9 +11,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Paytone+One&family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Paytone+One&family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+
+    <script src="js/script.js"></script>
 
 </head>
 
@@ -37,6 +39,7 @@
                         <a href="./register.html">Get Involved</a>
                         <a href="./about.html">About Us</a>
                         <a href="./contact.html">Contact Us</a>
+                        <a href="./dashboard.html">Dashboard</a>
                     </li>
                 </ul>
             </nav>
@@ -218,8 +221,8 @@
         </div>
 
         <div class="send">
-            <form action="">
-                <input type="email" name="emailid" placeholder="E-mail" required>
+            <form action="" onsubmit="return handleNewsletterSubmit(event)">
+                <input type="email" name="emailid" placeholder="E-mail" id="newsletter-email" required>
                 <input type="submit" value="Subscribe">
             </form>
         </div>
@@ -267,5 +270,29 @@
 
 
 </body>
+
+<script>
+    function handleNewsletterSubmit(event) {
+        event.preventDefault();
+
+        const email = document.getElementById('newsletter-email').value.trim();
+
+        if (!validateEmail(email)) {
+            showMessage('Please enter a valid email address', 'error');
+            return false;
+        }
+
+        const success = foodManager.addNewsletter(email);
+
+        if (success) {
+            showMessage('Thank you for subscribing! You will receive updates on our latest activities.', 'success');
+            event.target.reset();
+        } else {
+            showMessage('This email is already subscribed to our newsletter.', 'error');
+        }
+
+        return false;
+    }
+</script>
 
 </html>

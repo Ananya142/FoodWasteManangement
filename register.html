@@ -10,13 +10,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Paytone+One&family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Paytone+One&family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap"
       rel="stylesheet"
     />
     <link
       rel="stylesheet"
       href="https://unpkg.com/boxicons@latest/css/boxicons.min.css"
     />
+    <script src="js/script.js"></script>
   </head>
   <body class="register-body">
     <nav>
@@ -29,6 +30,7 @@
           <a href="./register.html">Get Involved</a>
           <a href="./about.html">About Us</a>
           <a href="./contact.html">Contact Us</a>
+          <a href="./dashboard.html">Dashboard</a>
         </li>
       </ul>
     </nav>
@@ -38,7 +40,7 @@
         <h1>Donate <span>Food</span></h1>
         <p>It's not how much we give, but how much love we put into giving!</p>
         <br />
-        <form action="" onsubmit="return validateform()">
+        <form action="" onsubmit="return handleDonationSubmit(event)">
           <input
             type="text"
             name="myname1"
@@ -50,7 +52,7 @@
             type="email"
             name="myemail"
             placeholder="Your Email"
-            id=""
+            id="email"
             required
           />
           <input
@@ -64,29 +66,29 @@
             type="text"
             name="myadd"
             placeholder="Collection Address"
-            id=""
+            id="address"
             required
           />
           <h4>Category</h4>
-          <input type="radio" name="myfood" id="" required /> Veg &nbsp; &nbsp;
+          <input type="radio" name="myfood" value="veg" id="veg" required /> Veg &nbsp; &nbsp;
           &nbsp; &nbsp; &nbsp; &nbsp;
-          <input type="radio" name="myfood" id="" /> Non-Veg &nbsp; &nbsp;
+          <input type="radio" name="myfood" value="nonveg" id="nonveg" /> Non-Veg &nbsp; &nbsp;
           &nbsp; &nbsp; &nbsp; &nbsp;
-          <input type="radio" name="myfood" id="" /> Both
-          <h4>Quanity (in Kg)</h4>
-          <input type="number" name="quantity" id="" />
+          <input type="radio" name="myfood" value="both" id="both" /> Both
+          <h4>Quantity (in Kg)</h4>
+          <input type="number" name="quantity" id="quantity" min="0.1" step="0.1" required />
           <h4>Food Preparation Date and Time</h4>
-          <input type="datetime-local" name="fooddate" id="" required /> <br />
+          <input type="datetime-local" name="fooddate" id="fooddate" required /> <br />
           <br />
           <textarea
             name="note"
-            id=""
+            id="note"
             cols="2"
             rows="3"
             placeholder="Special Note"
           ></textarea>
           <br /><br />
-          <input type="checkbox" name="t&c" id="" checked required /> I accept
+          <input type="checkbox" name="t&c" id="terms" checked required /> I accept
           the Terms & Conditions.
           <br />
           <input type="submit" value="Submit" class="submitbtn" />
@@ -126,25 +128,99 @@
       <div class="end">
         <p>
           Tel: 1800-00-000 Email: support@foodyard.com | Copyright © 2023
-          FoodYard | All Rights Reserved. <br />Website developed by: Kurmala
-          Chenchu Baba Manikanta | Mohd. Rahil | Lokesh Srireddy
+          FoodYard | All Rights Reserved. <br />Website developed by: Ananya
+          Goel | Sajal Aggarwal
         </p>
       </div>
     </section>
 
     <!-- Javascript -->
     <script>
-      function validateform() {
-        var tel = document.getElementById("phonenum").value;
+      function handleDonationSubmit(event) {
+        event.preventDefault();
 
-        if (tel.length < 10) {
-          alert("Phone number must be of atleast 10 digits!");
-          return false;
-        } else if (isNaN(tel)) {
-          alert("Phone number should not include character!");
+        // Get form values
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const phone = document.getElementById('phonenum').value.trim();
+        const address = document.getElementById('address').value.trim();
+        const category = document.querySelector('input[name="myfood"]:checked')?.value;
+        const quantity = document.getElementById('quantity').value;
+        const foodDate = document.getElementById('fooddate').value;
+        const note = document.getElementById('note').value.trim();
+        const termsAccepted = document.getElementById('terms').checked;
+
+        // Validation
+        if (!validateName(name)) {
+          showMessage('Please enter a valid name (at least 2 characters)', 'error');
           return false;
         }
-        return true;
+
+        if (!validateEmail(email)) {
+          showMessage('Please enter a valid email address', 'error');
+          return false;
+        }
+
+        if (!validatePhone(phone)) {
+          showMessage('Please enter a valid 10-digit phone number starting with 6-9', 'error');
+          return false;
+        }
+
+        if (!address) {
+          showMessage('Please enter a collection address', 'error');
+          return false;
+        }
+
+        if (!category) {
+          showMessage('Please select a food category', 'error');
+          return false;
+        }
+
+        if (!quantity || quantity <= 0) {
+          showMessage('Please enter a valid quantity greater than 0', 'error');
+          return false;
+        }
+
+        if (!foodDate) {
+          showMessage('Please select food preparation date and time', 'error');
+          return false;
+        }
+
+        if (!termsAccepted) {
+          showMessage('Please accept the Terms & Conditions', 'error');
+          return false;
+        }
+
+        // Check if preparation time is in the future
+        const prepDate = new Date(foodDate);
+        const now = new Date();
+        if (prepDate <= now) {
+          showMessage('Food preparation date and time must be in the future', 'error');
+          return false;
+        }
+
+        // Create donation object
+        const donation = {
+          name,
+          email,
+          phone,
+          address,
+          category,
+          quantity: parseFloat(quantity),
+          foodDate,
+          note
+        };
+
+        // Add to manager
+        const donationId = foodManager.addDonation(donation);
+
+        // Show success message
+        showMessage(`Thank you ${name}! Your donation request has been submitted successfully. Reference ID: ${donationId}`, 'success');
+
+        // Reset form
+        event.target.reset();
+
+        return false;
       }
     </script>
   </body>

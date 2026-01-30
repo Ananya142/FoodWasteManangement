@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Food Waste Management</title>
+    <link rel="icon" href="./files/logo.png">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Paytone+One&family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+    <script src="js/script.js"></script>
+    <style>
+        .dashboard {
+            padding: 120px 50px 50px;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            position: relative;
+        }
+
+        .dashboard::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="1" fill="rgba(102,126,234,0.1)"/><circle cx="80" cy="80" r="1" fill="rgba(102,126,234,0.1)"/><circle cx="40" cy="60" r="0.5" fill="rgba(102,126,234,0.1)"/><circle cx="60" cy="30" r="0.5" fill="rgba(102,126,234,0.1)"/></svg>');
+            opacity: 0.6;
+        }
+
+        .dashboard > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .dashboard h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--text-primary, #2c3e50);
+            font-size: clamp(2rem, 4vw, 2.5rem);
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 30px 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255,255,255,0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .stat-card h3 {
+            margin: 0 0 15px 0;
+            color: var(--text-primary, #2c3e50);
+            font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-card p {
+            font-size: clamp(2.5rem, 4vw, 3rem);
+            margin: 10px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .donations-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .donations-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #43e97b, #38f9d7);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .section-header h2 {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 400;
+            color: var(--text-primary, #2c3e50);
+            margin: 0;
+            font-family: 'Paytone One', cursive;
+            letter-spacing: 1px;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            border: 2px solid #e1e8ed;
+            border-radius: 25px;
+            cursor: pointer;
+            background: white;
+            color: var(--text-secondary, #5a6c7d);
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .donation-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .donation-table th,
+        .donation-table td {
+            padding: 16px 12px;
+            text-align: left;
+            border-bottom: 1px solid #f1f3f4;
+        }
+
+        .donation-table th {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.5px;
+            color: var(--text-primary, #2c3e50);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .donation-table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .donation-table tbody tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-pending {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+        }
+
+        .status-completed {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            color: white;
+        }
+
+        .status-cancelled {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+        }
+
+        .action-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            margin-right: 8px;
+        }
+
+        .btn-complete {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            color: white;
+            box-shadow: 0 2px 10px rgba(39, 174, 96, 0.3);
+        }
+
+        .btn-complete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.4);
+        }
+
+        .btn-cancel {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            box-shadow: 0 2px 10px rgba(231, 76, 60, 0.3);
+        }
+
+        .btn-cancel:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            z-index: 1000;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .back-btn:hover {
+            background: linear-gradient(135deg, #2980b9 0%, #21618c 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-btn">← Back to Home</a>
+
+    <section class="dashboard">
+        <h1>Food Waste Management Dashboard</h1>
+
+        <div class="stats" id="statsContainer">
+            <!-- Stats will be populated by JavaScript -->
+        </div>
+
+        <div class="donations-section">
+            <div class="section-header">
+                <h2>Donation Requests</h2>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" onclick="filterDonations('all')">All</button>
+                    <button class="filter-btn" onclick="filterDonations('pending')">Pending</button>
+                    <button class="filter-btn" onclick="filterDonations('completed')">Completed</button>
+                    <button class="filter-btn" onclick="filterDonations('cancelled')">Cancelled</button>
+                </div>
+            </div>
+
+            <table class="donation-table" id="donationsTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Category</th>
+                        <th>Quantity (kg)</th>
+                        <th>Address</th>
+                        <th>Prep Time</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="donationsTableBody">
+                    <!-- Donations will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <script>
+        let currentFilter = 'all';
+
+        function loadDashboard() {
+            loadStats();
+            loadDonations();
+        }
+
+        function loadStats() {
+            const stats = foodManager.getStats();
+            const statsContainer = document.getElementById('statsContainer');
+
+            statsContainer.innerHTML = `
+                <div class="stat-card">
+                    <h3>Total Donations</h3>
+                    <p>${stats.totalDonations}</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Pending</h3>
+                    <p>${stats.pendingDonations}</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Completed</h3>
+                    <p>${stats.completedDonations}</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Quantity (kg)</h3>
+                    <p>${stats.totalQuantity}</p>
+                </div>
+            `;
+        }
+
+        function loadDonations() {
+            const donations = currentFilter === 'all'
+                ? foodManager.getDonations()
+                : foodManager.getDonationsByStatus(currentFilter);
+
+            const tbody = document.getElementById('donationsTableBody');
+
+            if (donations.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="10" class="no-data">No donations found</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = donations.map(donation => `
+                <tr>
+                    <td>${donation.id}</td>
+                    <td>${donation.name}</td>
+                    <td>${donation.email}</td>
+                    <td>${donation.phone}</td>
+                    <td>${donation.category}</td>
+                    <td>${donation.quantity}</td>
+                    <td>${donation.address}</td>
+                    <td>${new Date(donation.foodDate).toLocaleString()}</td>
+                    <td><span class="status-badge status-${donation.status}">${donation.status}</span></td>
+                    <td>
+                        ${donation.status === 'pending' ? `
+                            <button class="action-btn btn-complete" onclick="updateStatus(${donation.id}, 'completed')">Complete</button>
+                            <button class="action-btn btn-cancel" onclick="updateStatus(${donation.id}, 'cancelled')">Cancel</button>
+                        ` : ''}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filterDonations(status) {
+            currentFilter = status;
+
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            loadDonations();
+        }
+
+        function updateStatus(id, status) {
+            if (foodManager.updateDonationStatus(id, status)) {
+                showMessage(`Donation ${status} successfully!`, 'success');
+                loadDashboard();
+            } else {
+                showMessage('Failed to update donation status', 'error');
+            }
+        }
+
+        // Load dashboard on page load
+        document.addEventListener('DOMContentLoaded', loadDashboard);
+    </script>
+</body>
+</html>
